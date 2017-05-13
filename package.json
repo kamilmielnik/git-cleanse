@@ -1,0 +1,37 @@
+{
+  "name": "git-cleanse",
+  "version": "1.0.0",
+  "description": "This command line tool will recursively remove all empty files (except `.gitkeep`, `.hgkeep` & `.keep`) and empty directories (except `.git`, `.hg` & `.svn`) from your file system, starting from your current working directory.",
+  "author": {
+    "name": "Kamil Mielnik",
+    "url": "http://kamilmielnik.pl/"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamilmielnik/git-cleanse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kamilmielnik/git-cleanse/issues"
+  },
+  "homepage": "https://github.com/kamilmielnik/git-cleanse#readme",
+  "keywords": [
+    "git",
+    "cleanse",
+    "clean",
+    "empty",
+    "directories",
+    "folders",
+    "files",
+    "version",
+    "control",
+    "node",
+    "node.js"
+  ],
+  "engines": {
+    "node": ">=6"
+  },
+  "bin": {
+    "git-cleanse": "./bin/git-cleanse.js"
+  }
+}
