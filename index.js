@@ -13,7 +13,7 @@ const FILES_TO_SKIP = [
   '.keep'
 ];
 
-cleanseDirectory(__dirname);
+cleanseDirectory(process.cwd());
 
 function cleanseDirectory(directoryPath) {
   const fileNames = fs.readdirSync(directoryPath);
