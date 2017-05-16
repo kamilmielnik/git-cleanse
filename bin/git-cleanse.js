@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-require('../index.js');
+const cleanseDirectory = require('../index.js');
+
+cleanseDirectory(process.cwd());

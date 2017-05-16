@@ -1,19 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-
-const DIRECTORIES_TO_SKIP = [
-  '.git',
-  '.hg',
-  '.svn'
-];
-
-const FILES_TO_SKIP = [
-  '.gitkeep',
-  '.hgkeep',
-  '.keep'
-];
-
-cleanseDirectory(process.cwd());
+const directoriesToSkip = require('./directories-to-skip.json');
+const filesToSkip = require('./files-to-skip.json');
 
 function cleanseDirectory(directoryPath) {
   const fileNames = fs.readdirSync(directoryPath);
@@ -23,7 +11,7 @@ function cleanseDirectory(directoryPath) {
     const fileStats = fs.lstatSync(filePath);
 
     if (fileStats.isDirectory()) {
-      const skip = DIRECTORIES_TO_SKIP.includes(fileName);
+      const skip = directoriesToSkip.includes(fileName);
 
       if (!skip) {
         cleanseDirectory(filePath);
@@ -43,7 +31,7 @@ function tryDeletingDirectory(directoryPath) {
   if (empty) {
     try {
       fs.rmdirSync(directoryPath);
-      console.log(`Empty directory removed: "${directoryPath}"`);
+      console.log(`Empty directory deleted: "${directoryPath}"`);
     } catch (error) {
       console.error(`Cannot delete empty directory: "${directoryPath}"\n\t${error}`);
     }
@@ -51,15 +39,17 @@ function tryDeletingDirectory(directoryPath) {
 }
 
 function tryDeletingFile(fileName, filePath, fileStats) {
-  const skip = FILES_TO_SKIP.includes(fileName);
+  const skip = filesToSkip.includes(fileName);
   const empty = fileStats.size === 0;
 
   if (!skip && empty) {
     try {
       fs.unlinkSync(filePath);
-      console.log(`Empty file removed: "${filePath}"`);
+      console.log(`Empty file deleted: "${filePath}"`);
     } catch (error) {
       console.error(`Cannot delete empty file: "${filePath}"\n\t${error}`);
     }
   }
 }
+
+module.exports = cleanseDirectory;
