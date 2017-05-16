@@ -1,55 +1,65 @@
 const fs = require('fs');
 const path = require('path');
-const directoriesToSkip = require('./directories-to-skip.json');
-const filesToSkip = require('./files-to-skip.json');
 
-function cleanseDirectory(directoryPath) {
-  const fileNames = fs.readdirSync(directoryPath);
+const createDirectoryCleanser = (directoriesToSkip = [], filesToSkip = []) => {
+  const cleanseDirectory = (directoryPath) => {
+    const names = fs.readdirSync(directoryPath);
 
-  for (fileName of fileNames) {
-    const filePath = path.join(directoryPath, fileName);
-    const fileStats = fs.lstatSync(filePath);
+    for (const name of names) {
+      cleanseDirectoryEntry(directoryPath, name);
+    }
 
-    if (fileStats.isDirectory()) {
-      const skip = directoriesToSkip.includes(fileName);
+    const empty = fs.readdirSync(directoryPath).length === 0;
+    if (empty) {
+      tryDeletingDirectory(directoryPath);
+    }
+  };
 
-      if (!skip) {
-        cleanseDirectory(filePath);
+  const cleanseDirectoryEntry = (directoryPath, name) => {
+    const fullPath = path.join(directoryPath, name);
+    const stats = fs.lstatSync(fullPath);
+
+    if (stats.isDirectory()) {
+      if (shouldDeleteDirectory(name)) {
+        cleanseDirectory(fullPath);
       }
-    } else {
-      tryDeletingFile(fileName, filePath, fileStats);
+    } else if (shouldDeleteFile(name, stats)) {
+      tryDeletingFile(fullPath);
     }
+  };
+
+  const shouldDeleteDirectory = (name) => {
+    const skip = directoriesToSkip.includes(name);
+    return !skip;
+  };
+
+  const shouldDeleteFile = (name, stats) => {
+    const skip = filesToSkip.includes(name);
+    const empty = stats.size === 0;
+    return !skip && empty;
+  };
+
+  return cleanseDirectory;
+};
+
+const tryDeletingDirectory = (fullPath) => {
+  try {
+    fs.rmdirSync(fullPath);
+    console.log(`Empty directory deleted: "${fullPath}"`);
+  } catch (error) {
+    console.error(`Cannot delete empty directory: "${fullPath}"\n\t${error}`);
   }
+};
 
-  tryDeletingDirectory(directoryPath);
-}
-
-function tryDeletingDirectory(directoryPath) {
-  const fileNames = fs.readdirSync(directoryPath);
-  const empty = fileNames.length === 0;
-
-  if (empty) {
-    try {
-      fs.rmdirSync(directoryPath);
-      console.log(`Empty directory deleted: "${directoryPath}"`);
-    } catch (error) {
-      console.error(`Cannot delete empty directory: "${directoryPath}"\n\t${error}`);
-    }
+const tryDeletingFile = (fullPath) => {
+  try {
+    fs.unlinkSync(fullPath);
+    console.log(`Empty file deleted: "${fullPath}"`);
+  } catch (error) {
+    console.error(`Cannot delete empty file: "${fullPath}"\n\t${error}`);
   }
-}
+};
 
-function tryDeletingFile(fileName, filePath, fileStats) {
-  const skip = filesToSkip.includes(fileName);
-  const empty = fileStats.size === 0;
-
-  if (!skip && empty) {
-    try {
-      fs.unlinkSync(filePath);
-      console.log(`Empty file deleted: "${filePath}"`);
-    } catch (error) {
-      console.error(`Cannot delete empty file: "${filePath}"\n\t${error}`);
-    }
-  }
-}
-
-module.exports = cleanseDirectory;
+module.exports = (directoryPath, directoriesToSkip, filesToSkip) => {
+  createDirectoryCleanser(directoriesToSkip, filesToSkip)(directoryPath);
+};

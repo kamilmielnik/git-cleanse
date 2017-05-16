@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
-const cleanseDirectory = require('../index.js');
+const gitCleanse = require('../index.js');
+const directoriesToSkip = require('./directories-to-skip.json');
+const filesToSkip = require('./files-to-skip.json');
 
-cleanseDirectory(process.cwd());
+gitCleanse(process.cwd(), directoriesToSkip, filesToSkip);
