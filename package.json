@@ -4,7 +4,8 @@
   "description": "This command line tool will recursively remove all empty files (except `.gitkeep`, `.hgkeep` & `.keep`) and empty directories (except `.git`, `.hg` & `.svn`) from your file system, starting from your current working directory.",
   "author": {
     "name": "Kamil Mielnik",
-    "url": "http://kamilmielnik.pl/"
+    "email": "kamil.adam.mielnik@gmail.com",
+    "url": "http://kamilmielnik.com/"
   },
   "license": "MIT",
   "repository": {
