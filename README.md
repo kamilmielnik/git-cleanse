@@ -1,6 +1,6 @@
 # git-cleanse
 ## Description
-This command line tool will recursively remove all empty files (except `.gitkeep`, `.hgkeep` & `.keep`) and empty directories (except `.git`, `.hg` & `.svn`) from your file system, starting from your current working directory.
+This command line tool will recursively remove all empty files (except `.gitkeep`, `.hgkeep` & `.keep`) and empty directories (except `.git`, `.hg`, `.svn` & 'node_modules') from your file system, starting from your current working directory.
 
 This tool is not configurable.
 

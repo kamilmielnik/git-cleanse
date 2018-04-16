@@ -4,13 +4,10 @@ const path = require('path');
 const createDirectoryCleanser = (directoriesToSkip = [], filesToSkip = []) => {
   const cleanseDirectory = (directoryPath) => {
     const names = fs.readdirSync(directoryPath);
-
     for (const name of names) {
       cleanseDirectoryEntry(directoryPath, name);
     }
-
-    const empty = fs.readdirSync(directoryPath).length === 0;
-    if (empty) {
+    if (isDirectoryEmpty(directoryPath)) {
       tryDeletingDirectory(directoryPath);
     }
   };
@@ -42,24 +39,24 @@ const createDirectoryCleanser = (directoriesToSkip = [], filesToSkip = []) => {
   return cleanseDirectory;
 };
 
+const isDirectoryEmpty = (fullPath) => fs.readdirSync(fullPath).length === 0;
+
 const tryDeletingDirectory = (fullPath) => {
   try {
     fs.rmdirSync(fullPath);
-    console.log(`Empty directory deleted: "${fullPath}"`);
+    console.log(`Directory deleted: "${fullPath}"`);
   } catch (error) {
-    console.error(`Cannot delete empty directory: "${fullPath}"\n\t${error}`);
+    console.error(`Cannot delete directory: "${fullPath}"\n\t${error}`);
   }
 };
 
 const tryDeletingFile = (fullPath) => {
   try {
     fs.unlinkSync(fullPath);
-    console.log(`Empty file deleted: "${fullPath}"`);
+    console.log(`File deleted: "${fullPath}"`);
   } catch (error) {
-    console.error(`Cannot delete empty file: "${fullPath}"\n\t${error}`);
+    console.error(`Cannot delete file: "${fullPath}"\n\t${error}`);
   }
 };
 
-module.exports = (directoryPath, directoriesToSkip, filesToSkip) => {
-  createDirectoryCleanser(directoriesToSkip, filesToSkip)(directoryPath);
-};
+module.exports = createDirectoryCleanser;
