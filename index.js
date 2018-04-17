@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const createDirectoryCleanser = (directoriesToSkip = [], filesToSkip = []) => {
+const createDirectoryCleanser = ({ directoriesToSkip = [], filesToSkip = [] }) => {
   const cleanseDirectory = (directoryPath) => {
     const names = fs.readdirSync(directoryPath);
     for (const name of names) {
